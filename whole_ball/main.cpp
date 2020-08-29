@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+п»ї#include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
 #include "tinyxml2.h"
 #include <iostream>
@@ -8,8 +8,8 @@ using namespace sf;
 using namespace tinyxml2;
 using namespace std;
 
-const float SCALE = 30.f; //перевод из метров в px в box2d
-const float DEG = 57.29577f; //перевод из радиан в градусы в box2d
+const float SCALE = 30.f; //РїРµСЂРµРІРѕРґ РёР· РјРµС‚СЂРѕРІ РІ px РІ box2d
+const float DEG = 57.29577f; //РїРµСЂРµРІРѕРґ РёР· СЂР°РґРёР°РЅ РІ РіСЂР°РґСѓСЃС‹ РІ box2d
 
 b2Vec2 Gravity(0.0f, 0.0f);
 b2World World(Gravity);
@@ -255,7 +255,8 @@ bool Level::LoadFromFile(string filename)
                         enemyImage.loadFromFile("image/sphere.png");
                         sprite.setTexture(enemyImage);
                         sprite.setTextureRect(IntRect(0, 0, width, height));
-                        sprite.setPosition(x, y - height);
+                        sprite.setPosition(
+                            x, y - height);
                     }
                 }
                 else
@@ -299,7 +300,7 @@ bool Level::LoadFromFile(string filename)
 int main()
 {
     double speedMIN = 0, speedMAX = 0;
-    bool flag = false;
+    bool directionFlag = false;
 
     Level lvl;
 
@@ -309,14 +310,13 @@ int main()
     window.create(VideoMode(1024, 768), "Whole Ball Game v.1.0");
     //window.setFramerateLimit(60);
     
-    /*Создаем обьект шар*/
-    
+    /*РЎРѕР·РґР°РµРј РѕР±СЊРµРєС‚ С€Р°СЂ*/
     Object playerBall = lvl.GetObject("ball");
 
-    b2BodyDef bDef;
-    bDef.type = b2_dynamicBody;
-    bDef.position.Set(playerBall.rect.left / SCALE, playerBall.rect.top / SCALE);
-    b2Body* pBodyBall = World.CreateBody(&bDef);
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position.Set(playerBall.rect.left / SCALE, playerBall.rect.top / SCALE);
+    b2Body* pBodyBall = World.CreateBody(&bodyDef);
     b2CircleShape shape;
     shape.m_radius = ((playerBall.rect.height / 2)) / SCALE;
     b2FixtureDef fixtureDef;
@@ -327,8 +327,7 @@ int main()
     pBodyBall->CreateFixture(&fixtureDef);
     pBodyBall->SetUserData(&playerBall.name);
 
-    /*Создаем обьект платформа*/
-
+    /*РЎРѕР·РґР°РµРј РѕР±СЊРµРєС‚ РїР»Р°С‚С„РѕСЂРјР°*/
     Object platform135, platform45;
     vector <Object> platform;
 
@@ -345,8 +344,8 @@ int main()
     {
         platform[i].type = "solid";
         platform[i].rect = Rect<int>(0, 0, 13, 48);
-        platform[i].sprite.setTextureRect(platform[i].rect);
         platform[i].sprite.setTexture(img);
+        platform[i].sprite.setTextureRect(platform[i].rect);
         platform[i].sprite.setOrigin(platform[i].rect.width / 2, platform[i].rect.height / 2);
         if (platform[i].name == "platform135")
         {
@@ -359,9 +358,8 @@ int main()
             platform[i].sprite.setPosition(170, 90);
         }
     }
-
-    /*Создаем обьект враг*/
-
+    
+    /*РЎРѕР·РґР°РµРј РѕР±СЊРµРєС‚ РІСЂР°Рі*/
     vector <Object> enemy;
     vector <b2Body*> enemyBody;
     Vector2i tileSize = lvl.GetTileSize();
@@ -384,8 +382,7 @@ int main()
         enemyBody.push_back(body);
     }
 
-    /*Создаем обькт стена*/
-
+    /*РЎРѕР·РґР°РµРј РѕР±СЊРµРєС‚ СЃС‚РµРЅР°*/
     vector<Object> wall = lvl.GetObjects("solid");
     vector <b2Body*> wallBody;
 
@@ -421,44 +418,18 @@ int main()
                 window.close();
                 break;
             case Event::KeyPressed:
-                if (event.key.code == Keyboard::Up)
-                {
-                    pBodyBall->SetLinearVelocity(b2Vec2(0.0f, -0.5f));
-                    flag = true;
-                } 
-                if (event.key.code == Keyboard::Right)
+                if (event.key.code == Keyboard::Space)
                 {
                     pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
                     speedMIN = 0.45, speedMAX = 0.5;
-                    flag = false;
-                } 
-                if (event.key.code == Keyboard::Left)
-                {
-                    pBodyBall->SetLinearVelocity(b2Vec2(-0.5f, 0.0f));
-                    flag = false;
                 }
-                if (event.key.code == Keyboard::Down)
-                {
-                    pBodyBall->SetLinearVelocity(b2Vec2(0.0f, 0.5f));
-                    flag = true;
-                }
-                if (event.key.code == Keyboard::Space)
-                {
-                    speedMIN *= 2;
-                    speedMAX *= 2;
-                }
-                if (event.key.code == Keyboard::Enter)
-                {
-                    speedMIN /= 2;
-                    speedMAX /= 2;
-                }           
                 break;
             }
         }
 
+        /*РЎРјРµРЅР° РЅР°РїСЂР°РІР»РµРЅРёСЏ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ СЃРєРѕСЂРѕСЃС‚Рё*/
         b2Vec2 vel = pBodyBall->GetLinearVelocity();
-
-        if (flag == false)
+        if (directionFlag == false)
         {
             if (vel.x < 0)
             {
@@ -473,7 +444,7 @@ int main()
                 vel.y = 0;
             }
         }
-        if (flag == true)
+        if (directionFlag == true)
         {
             if (vel.y < 0)
             {
@@ -488,11 +459,10 @@ int main()
                 vel.x = 0;
             }
         }
-
         pBodyBall->SetLinearVelocity(vel);
+        vel.Normalize();
 
-        //vel.Normalize();
-
+        /*РџСЂРѕРІРµСЂРєР° РЅР° СЃС‚РѕР»РєРЅРѕРІРµРЅРёСЏ СЃ С€Р°СЂР°РјРё*/
         for (b2ContactEdge* ce = pBodyBall->GetContactList(); ce; ce = NULL)
         {
             b2Contact* c = ce->contact;
@@ -504,29 +474,13 @@ int main()
                     enemy.erase(enemy.begin() + i);
                     enemyBody.erase(enemyBody.begin() + i);
                 }
-            /*
-            //проверка столкновения с стеной, заменить на проверку по платформе.
-            for (int i = 0; i < wallBody.size(); i++)
-                if (c->GetFixtureA() == wallBody[i]->GetFixtureList())
-                {
-                    //float angle = 180 / DEG; //двиг вправо
-                    //float angle = 270 / DEG; //двиг вниз
-                    //float angle = 90 / DEG; //двиг вверх
-                    //float angle = 0 / DEG; //двиг влево
-                    //float speed = sqrt(velosity.x * velosity.x + velosity.y * velosity.y);
-                    //b2Vec2 vector = speed * b2Vec2(cos(angle), sin(angle));
-                }
-            */
         }
 
         World.Step(1 / 60.f, 8, 3);
         
         b2Vec2 pos = pBodyBall->GetPosition();
 
-        //float angle = pBodyBall->GetAngle();
-
         playerBall.sprite.setPosition(pos.x * SCALE, pos.y * SCALE);
-        //playerBall.sprite.setRotation(angle * DEG);
 
         window.clear();
 
@@ -538,12 +492,68 @@ int main()
         {
             window.draw(obj.sprite);
         }
-
+        
+        /*РџРµСЂРµРјРµС‰РµРЅРёРµ РїР»Р°С‚С„РѕСЂРјС‹*/
         for (int i = 0; i < platform.size(); i++)
         {
             if (platform[i].sprite.getGlobalBounds().contains(mousePos.x, mousePos.y) && Mouse::isButtonPressed(Mouse::Left))
             {
                 platform[i].sprite.setPosition(mousePos.x, mousePos.y);
+            }
+        }
+        
+        /*РџСЂРѕРІРµСЂРєР° РЅР° СЃС‚РѕР»РєРЅРѕРІРµРЅРёРµ СЃ РїР»Р°С‚С„РѕСЂРјР°РјРё*/
+        for (int i = 0; i < platform.size(); i++)
+        {
+            if (platform[i].sprite.getGlobalBounds().intersects(playerBall.sprite.getGlobalBounds()))
+            {
+                b2Vec2 dir = pBodyBall->GetLinearVelocity();
+                if (platform[i].name == "platform45")
+                {
+                    if (dir.x < 0 && dir.y == 0)
+                    {
+                        pBodyBall->SetLinearVelocity(b2Vec2(0.0f, 0.5f));
+                        directionFlag = true;
+                    }
+                    else if (dir.x > 0 && dir.y == 0)
+                    {
+                        pBodyBall->SetLinearVelocity(b2Vec2(0.0f, -0.5f));
+                        directionFlag = true;
+                    }
+                    else if (dir.y < 0 && dir.x == 0)
+                    {
+                        pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
+                        directionFlag = false;
+                    }
+                    else if (dir.y > 0 && dir.x == 0)
+                    {
+                        pBodyBall->SetLinearVelocity(b2Vec2(-0.5f, 0.0f));
+                        directionFlag = false;
+                    }
+                }
+                else if (platform[i].name == "platform135")
+                {
+                    if (dir.x < 0 && dir.y == 0)
+                    {
+                        pBodyBall->SetLinearVelocity(b2Vec2(0.0f, -0.5f));
+                        directionFlag = true;
+                    }
+                    else if (dir.x > 0 && dir.y == 0)
+                    {
+                        pBodyBall->SetLinearVelocity(b2Vec2(0.0f, 0.5f));
+                        directionFlag = true;
+                    }
+                    else if (dir.y < 0 && dir.x == 0)
+                    {
+                        pBodyBall->SetLinearVelocity(b2Vec2(-0.5f, 0.0f));
+                        directionFlag = false;
+                    }
+                    else if (dir.y > 0 && dir.x == 0)
+                    {
+                        pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
+                        directionFlag = false;
+                    }
+                }
             }
         }
 
@@ -555,98 +565,5 @@ int main()
         window.display();
     }
 
-    /*
-    RenderWindow window(VideoMode(1024, 768), "Whole Ball");
-    window.setFramerateLimit(60);
-
-    RectangleShape rectangle(Vector2f(640.f, 40.f));
-    rectangle.setFillColor(Color(250, 150, 100));
-    rectangle.setPosition(Vector2f(192.f, 600.f));
-
-    Texture tx;
-    tx.create(20, 20);
-    tx.loadFromFile("sphere-16.png");
-
-    CircleShape circle(20.f);
-    //circle.setFillColor(Color(100, 250, 50));
-    circle.setTexture(&tx, 0);
-    circle.setPosition(Vector2f(300.f, 200.f));
-
-    b2PolygonShape gr;
-    gr.SetAsBox(320 / SCALE, 40 / SCALE);
-
-    b2BodyDef bdef;
-    bdef.position.Set(490 / SCALE, 620 / SCALE);
-
-    b2Body* b_ground = World.CreateBody(&bdef);
-    b_ground->CreateFixture(&gr, 1);
-
-    b2CircleShape ball;
-    ball.m_radius = 20 / SCALE;
-
-    bdef.type = b2_dynamicBody;
-    //bdef.type = b2_kinematicBody;;
-
-    b2FixtureDef fdef;
-    fdef.density = 2;
-    fdef.shape = &ball;
-
-    char ball_str[] = "ball";
-    int posX = 300;
-    int posY = 200;
-    float res = 1;
-
-    for (size_t i = 0; i < 5; i++)
-    {
-        bdef.position.Set(posX / SCALE, posY / SCALE);
-        b2Body* pBody = World.CreateBody(&bdef);
-        fdef.restitution = res;
-        pBody->CreateFixture(&fdef);
-        pBody->SetUserData(ball_str);
-        //pBody->SetLinearVelocity(b2Vec2(10, 0));
-        //pBody->SetLinearDamping(1);
-        posX += 100; posY -= 10;
-        res -= 0.01;
-    }
-
-    while (window.isOpen())
-    {
-        Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == Event::Closed)
-            {
-                window.close();
-            }
-        }
-        World.Step(1 / 60.f, 8, 3);
-        window.clear();
-        window.draw(rectangle);
-        b2Vec2 pos;
-        Vector2i mousePos = Mouse::getPosition(window);
-
-        for (b2Body* it = World.GetBodyList(); it != 0; it = it->GetNext())
-        {
-            pos = it->GetPosition();
-            float angle = it->GetAngle();
-
-            if (it->GetUserData() == ball_str)
-            {
-                circle.setPosition(pos.x * SCALE, pos.y * SCALE);
-                //circle.setRotation(angle * DEG);
-            }
-            window.draw(circle);
-        }
-
-        if (circle.getGlobalBounds().contains(mousePos.x, mousePos.y) && Mouse::isButtonPressed(Mouse::Left))
-        {
-            circle.setPosition(mousePos.x - 20, mousePos.y - 20);
-            pos.x = mousePos.x - 20; pos.y = mousePos.y - 20;
-            //circle.setRotation(angle * DEG);
-
-        }
-        window.display();
-    }
-    */
     return 0;
 }
