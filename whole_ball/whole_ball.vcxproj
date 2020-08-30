@@ -153,11 +153,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="box2d\box2d.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SFML\Graphics.hpp" />
     <ClInclude Include="tinyxml2.h" />
