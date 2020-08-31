@@ -147,6 +147,11 @@ int main()
                     platform.push_back(getPlatform(platformImg));
                 else if (platform.back().sprite.getPosition().y > 100)
                     platform.push_back(getPlatform(platformImg));
+                for (auto it = platform.begin(); it != platform.end(); it++)
+                {
+                    if (it->sprite.getPosition().y > 100)
+                        it->direct = false;
+                }
                 break;
             }
         }
@@ -209,7 +214,8 @@ int main()
         
         /*Перемещение платформы*/
         for (auto it = platform.begin(); it != platform.end(); it++)
-        {
+        {   
+            if (it->direct == false) continue;
             if (it->sprite.getGlobalBounds().contains(mousePos.x, mousePos.y) && Mouse::isButtonPressed(Mouse::Left))
             {
                 it->sprite.setPosition(mousePos.x, mousePos.y);

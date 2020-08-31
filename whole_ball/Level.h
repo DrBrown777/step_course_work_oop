@@ -16,6 +16,7 @@ struct Object
     string type;
     Rect<int> rect;
     Sprite sprite;
+    bool direct = true;
 };
 
 struct Layer
