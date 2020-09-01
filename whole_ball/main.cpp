@@ -1,6 +1,7 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
 #include "Level.h"
+#include "Ball.h"
 #include <list>
 
 using namespace sf;
@@ -30,34 +31,17 @@ Object getPlatform(Texture& img)
 
 int main()
 {
-    double speedMIN = 0, speedMAX = 0;
-    bool directionFlag = false;
+    RenderWindow window;
+    window.create(VideoMode(1024, 768), "Whole Ball Game v.1.0");
 
+    /*Создаем обьект Уровень*/
     Level lvl;
 
     lvl.LoadFromFile("LevelOne/level1.tmx");
 
-    RenderWindow window;
-    window.create(VideoMode(1024, 768), "Whole Ball Game v.1.0");
-    //window.setFramerateLimit(60);
-    
     /*Создаем обьект шар*/
-    Object playerBall = lvl.GetObject("ball");
-
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(playerBall.rect.left / SCALE, playerBall.rect.top / SCALE);
-    b2Body* pBodyBall = World.CreateBody(&bodyDef);
-    b2CircleShape shape;
-    shape.m_radius = ((playerBall.rect.height / 2)) / SCALE;
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &shape;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.0f;
-    fixtureDef.restitution = 0.0f;
-    pBodyBall->CreateFixture(&fixtureDef);
-    pBodyBall->SetUserData(&playerBall.name);
-
+    Ball playerBall(World, lvl.GetObject("ball"), SCALE);
+    
     /*Создаем обьект платформа*/
     Texture platformImg; 
     platformImg.loadFromFile("image/platform.png");
@@ -125,8 +109,8 @@ int main()
             case Event::KeyPressed:
                 if (event.key.code == Keyboard::Space)
                 {
-                    pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
-                    speedMIN = 0.45, speedMAX = 0.5;
+                    playerBall.SetLinVel(b2Vec2(0.5f, 0.0f));
+                    playerBall.SetSpeed();
                 }
                 break;
             case Event::MouseButtonReleased:
@@ -157,61 +141,17 @@ int main()
         }
 
         /*Смена направления в зависимости от скорости*/
-        b2Vec2 vel = pBodyBall->GetLinearVelocity();
-        if (directionFlag == false)
-        {
-            if (vel.x < 0)
-            {
-                if (vel.x >= -speedMIN) { vel.x = -speedMIN; }
-                if (vel.x <= -speedMAX) { vel.x = -speedMAX;  }
-                vel.y = 0;
-            }
-            else
-            {
-                if (vel.x <= speedMIN) { vel.x = speedMIN; }
-                if (vel.x >= speedMAX) { vel.x = speedMAX;  }
-                vel.y = 0;
-            }
-        }
-        if (directionFlag == true)
-        {
-            if (vel.y < 0)
-            {
-                if (vel.y >= -speedMIN) { vel.y = -speedMIN; }
-                if (vel.y <= -speedMAX) { vel.y = -speedMAX;  }
-                vel.x = 0;
-            }
-            else
-            {
-                if (vel.y <= speedMIN) { vel.y = speedMIN; }
-                if (vel.y >= speedMAX) { vel.y = speedMAX;  }
-                vel.x = 0;
-            }
-        }
-        pBodyBall->SetLinearVelocity(vel);
-        vel.Normalize();
+        playerBall.SetDirection();
 
         /*Проверка на столкновения с шарами*/
-        for (b2ContactEdge* ce = pBodyBall->GetContactList(); ce; ce = NULL)
-        {
-            b2Contact* c = ce->contact;
-
-            for (int i = 0; i < enemyBody.size(); i++)
-                if (c->GetFixtureB() == enemyBody[i]->GetFixtureList())
-                {
-                    enemyBody[i]->DestroyFixture(enemyBody[i]->GetFixtureList());
-                    enemy.erase(enemy.begin() + i);
-                    enemyBody.erase(enemyBody.begin() + i);
-                }
-        }
+        playerBall.CheckCollisionEnemy(enemy, enemyBody);
 
         World.Step(1 / 60.f, 8, 3);
         
         window.clear();
 
-        b2Vec2 pos = pBodyBall->GetPosition();
-        playerBall.sprite.setPosition(pos.x* SCALE, pos.y* SCALE);
-        
+        playerBall.UpdatePosition(SCALE);
+
         /*Перемещение платформы*/
         for (auto it = platform.begin(); it != platform.end(); it++)
         {   
@@ -224,64 +164,11 @@ int main()
         }
 
         /*Проверка на столкновение с платформами*/
-        for (auto it = platform.begin(); it != platform.end(); it++)
-        {
-            if (it->sprite.getGlobalBounds().intersects(playerBall.sprite.getGlobalBounds()))
-            {
-                b2Vec2 dir = pBodyBall->GetLinearVelocity();
-
-                if (it->sprite.getRotation() == 45 || it->sprite.getRotation() == 225)
-                {
-                    if (dir.x < 0 && dir.y == 0)
-                    {
-                        pBodyBall->SetLinearVelocity(b2Vec2(0.0f, 0.5f));
-                        directionFlag = true;
-                    }
-                    else if (dir.x > 0 && dir.y == 0)
-                    {
-                        pBodyBall->SetLinearVelocity(b2Vec2(0.0f, -0.5f));
-                        directionFlag = true;
-                    }
-                    else if (dir.y < 0 && dir.x == 0)
-                    {
-                        pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
-                        directionFlag = false;
-                    }
-                    else if (dir.y > 0 && dir.x == 0)
-                    {
-                        pBodyBall->SetLinearVelocity(b2Vec2(-0.5f, 0.0f));
-                        directionFlag = false;
-                    }
-                }
-                else if (it->sprite.getRotation() == 315 || it->sprite.getRotation() == 135)
-                {
-                    if (dir.x < 0 && dir.y == 0)
-                    {
-                        pBodyBall->SetLinearVelocity(b2Vec2(0.0f, -0.5f));
-                        directionFlag = true;
-                    }
-                    else if (dir.x > 0 && dir.y == 0)
-                    {
-                        pBodyBall->SetLinearVelocity(b2Vec2(0.0f, 0.5f));
-                        directionFlag = true;
-                    }
-                    else if (dir.y < 0 && dir.x == 0)
-                    {
-                        pBodyBall->SetLinearVelocity(b2Vec2(-0.5f, 0.0f));
-                        directionFlag = false;
-                    }
-                    else if (dir.y > 0 && dir.x == 0)
-                    {
-                        pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
-                        directionFlag = false;
-                    }
-                }
-            }
-        }
+        playerBall.CheckCollisionPlatform(platform);
 
         lvl.Draw(window);
 
-        window.draw(playerBall.sprite);
+        playerBall.Draw(window);
 
         for (const auto& obj : enemy)
         {
