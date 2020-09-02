@@ -29,20 +29,27 @@ Object getPlatform(Texture& img)
     return obj;
 }
 
+void SetSpeed(Ball& playerBall, double _speedMin, double _speedMax)
+{
+    playerBall.pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
+    playerBall.speed.first = _speedMin;
+    playerBall.speed.second = _speedMax;
+}
+
 int main()
 {
     RenderWindow window;
     window.create(VideoMode(1024, 768), "Whole Ball Game v.1.0");
 
-    /*Создаем обьект Уровень*/
+    /*Создаем обьект Карта*/
     Level lvl;
 
-    lvl.LoadFromFile("LevelOne/level1.tmx");
+    lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
     Vector2i tileSize = lvl.GetTileSize();
 
     /*Создаем обьект шар*/
     Ball playerBall(World, lvl.GetObject("ball"), SCALE);
-    
+
     /*Создаем обьект платформа*/
     Texture platformImg; 
     platformImg.loadFromFile("image/platform.png");
@@ -71,28 +78,6 @@ int main()
         enemyBody.push_back(body);
     }
 
-    /*Создаем обьект стена*/
-    vector<Object> wall = lvl.GetObjects("solid");
-    vector <b2Body*> wallBody;
-
-    for (int i = 0; i < wall.size(); i++)
-    {
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_staticBody;
-        bodyDef.position.Set((wall[i].rect.left + tileSize.x / 2 * (wall[i].rect.width / tileSize.x - 1)) / SCALE,
-            (wall[i].rect.top + tileSize.y / 2 * (wall[i].rect.height / tileSize.y - 1)) / SCALE);
-        b2Body* body = World.CreateBody(&bodyDef);
-        b2PolygonShape shape;
-        shape.SetAsBox(wall[i].rect.width / 2 / SCALE, wall[i].rect.height / 2 / SCALE);
-        b2FixtureDef fixtureDef;
-        fixtureDef.shape = &shape;
-        fixtureDef.density = 1.0f;
-        fixtureDef.friction = 0.0f;
-        body->CreateFixture(&fixtureDef);
-        body->SetUserData(&wall[i].name);
-        wallBody.push_back(body);
-    }
-
     while (window.isOpen())
     {
         Event event;
@@ -109,7 +94,7 @@ int main()
             case Event::KeyPressed:
                 if (event.key.code == Keyboard::Space)
                 {
-                    playerBall.SetSpeed();
+                    SetSpeed(playerBall, 0.45, 0.5);
                 }
                 break;
             case Event::MouseButtonReleased:

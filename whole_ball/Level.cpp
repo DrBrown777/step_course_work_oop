@@ -29,7 +29,7 @@ void Level::Draw(RenderWindow& window)
             window.draw(layers[layer].tiles[tile]);
 }
 
-bool Level::LoadFromFile(string filename)
+bool Level::LoadFromFile(string filename, b2World& World, const float& SCALE)
 {
     XMLDocument levelFile;
 
@@ -248,5 +248,32 @@ bool Level::LoadFromFile(string filename)
         cout << "No object layers found..." << endl;
     }
 
+    initWall(World, SCALE);
+
     return true;
+}
+
+void Level::initWall(b2World& World, const float& SCALE)
+{
+    wall = GetObjects("solid");
+
+    for (int i = 0; i < wall.size(); i++)
+    {
+        b2BodyDef bodyDef;
+        b2Body* body;
+        b2PolygonShape shape;
+        b2FixtureDef fixtureDef;
+
+        bodyDef.type = b2_staticBody;
+        bodyDef.position.Set((wall[i].rect.left + tileWidth / 2 * (wall[i].rect.width / tileWidth - 1)) / SCALE,
+            (wall[i].rect.top + tileHeight / 2 * (wall[i].rect.height / tileHeight - 1)) / SCALE);
+        body = World.CreateBody(&bodyDef);
+        shape.SetAsBox(wall[i].rect.width / 2 / SCALE, wall[i].rect.height / 2 / SCALE);
+        fixtureDef.shape = &shape;
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.0f;
+        body->CreateFixture(&fixtureDef);
+        body->SetUserData(&wall[i].name);
+        wallBody.push_back(body);
+    }
 }
