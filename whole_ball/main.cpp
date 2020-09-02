@@ -38,6 +38,7 @@ int main()
     Level lvl;
 
     lvl.LoadFromFile("LevelOne/level1.tmx");
+    Vector2i tileSize = lvl.GetTileSize();
 
     /*Создаем обьект шар*/
     Ball playerBall(World, lvl.GetObject("ball"), SCALE);
@@ -51,7 +52,6 @@ int main()
     /*Создаем обьект враг*/
     vector <Object> enemy;
     vector <b2Body*> enemyBody;
-    Vector2i tileSize = lvl.GetTileSize();
 
     enemy = lvl.GetObjects("enemy");
 
@@ -109,7 +109,6 @@ int main()
             case Event::KeyPressed:
                 if (event.key.code == Keyboard::Space)
                 {
-                    playerBall.SetLinVel(b2Vec2(0.5f, 0.0f));
                     playerBall.SetSpeed();
                 }
                 break;
@@ -140,15 +139,12 @@ int main()
             }
         }
 
-        /*Смена направления в зависимости от скорости*/
-        playerBall.SetDirection();
-
-        /*Проверка на столкновения с шарами*/
-        playerBall.CheckCollisionEnemy(enemy, enemyBody);
-
         World.Step(1 / 60.f, 8, 3);
         
         window.clear();
+
+        /*Смена направления в зависимости от скорости*/
+        playerBall.SetDirection();
 
         playerBall.UpdatePosition(SCALE);
 
@@ -163,8 +159,8 @@ int main()
             }
         }
 
-        /*Проверка на столкновение с платформами*/
-        playerBall.CheckCollisionPlatform(platform);
+        /*Проверка на столкновения*/
+        playerBall.CheckCollision(enemy, enemyBody, platform);
 
         lvl.Draw(window);
 

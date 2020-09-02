@@ -20,6 +20,7 @@ Ball::Ball(b2World& World, Object _playerBall, const float& SCALE)
     pBodyBall->SetUserData(&playerBall.name);
 
     speed = make_pair(0, 0);
+
     directionFlag = false;
 }
 
@@ -30,6 +31,7 @@ void Ball::SetLinVel(b2Vec2 _linearVelocity)
 
 void Ball::SetSpeed(double _speedMin, double _speedMax)
 {
+    SetLinVel(b2Vec2(0.5f, 0.0f));
     speed.first = _speedMin;
     speed.second = _speedMax;
 }
@@ -37,18 +39,20 @@ void Ball::SetSpeed(double _speedMin, double _speedMax)
 void Ball::SetDirection()
 {
     b2Vec2 vel = GetLinVel();
+    pair <double, double> spd = GetSpeed();
+
     if (GetDirFlag() == false)
     {
         if (vel.x < 0)
         {
-            if (vel.x >= -GetSpeed().first) { vel.x = -GetSpeed().first; }
-            if (vel.x <= -GetSpeed().second) { vel.x = -GetSpeed().second; }
+            if (vel.x >= -spd.first) { vel.x = -spd.first; }
+            if (vel.x <= -spd.second) { vel.x = -spd.second; }
             vel.y = 0;
         }
         else
         {
-            if (vel.x <= GetSpeed().first) { vel.x = GetSpeed().first; }
-            if (vel.x >= GetSpeed().second) { vel.x = GetSpeed().second; }
+            if (vel.x <= spd.first) { vel.x = spd.first; }
+            if (vel.x >= spd.second) { vel.x = spd.second; }
             vel.y = 0;
         }
     }
@@ -56,14 +60,14 @@ void Ball::SetDirection()
     {
         if (vel.y < 0)
         {
-            if (vel.y >= -GetSpeed().first) { vel.y = -GetSpeed().first; }
-            if (vel.y <= -GetSpeed().second) { vel.y = -GetSpeed().second; }
+            if (vel.y >= -spd.first) { vel.y = -spd.first; }
+            if (vel.y <= -spd.second) { vel.y = -spd.second; }
             vel.x = 0;
         }
         else
         {
-            if (vel.y <= GetSpeed().first) { vel.y = GetSpeed().first; }
-            if (vel.y >= GetSpeed().second) { vel.y = GetSpeed().second; }
+            if (vel.y <= spd.first) { vel.y = spd.first; }
+            if (vel.y >= spd.second) { vel.y = spd.second; }
             vel.x = 0;
         }
     }
@@ -98,7 +102,7 @@ bool Ball::GetDirFlag()
     return directionFlag;
 }
 
-void Ball::CheckCollisionEnemy(vector<Object>& enemy, vector<b2Body*>& enemyBody)
+void Ball::CheckCollision(vector<Object>& enemy, vector<b2Body*>& enemyBody, const list <Object>& platform)
 {
     for (b2ContactEdge* ce = pBodyBall->GetContactList(); ce; ce = NULL)
     {
@@ -112,10 +116,7 @@ void Ball::CheckCollisionEnemy(vector<Object>& enemy, vector<b2Body*>& enemyBody
                 enemyBody.erase(enemyBody.begin() + i);
             }
     }
-}
 
-void Ball::CheckCollisionPlatform(const list <Object>& platform)
-{
     for (auto it = platform.begin(); it != platform.end(); it++)
     {
         if (it->sprite.getGlobalBounds().intersects(playerBall.sprite.getGlobalBounds()))

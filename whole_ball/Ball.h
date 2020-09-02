@@ -23,8 +23,7 @@ public:
 	b2Vec2 GetLinVel();
 	pair <double, double> GetSpeed();
 	bool GetDirFlag();
-	void CheckCollisionEnemy(vector <Object>& enemy, vector <b2Body*>& enemyBody);
-	void CheckCollisionPlatform(const list <Object>& platform);
+	void CheckCollision(vector <Object>& enemy, vector <b2Body*>& enemyBody, const list <Object>& platform);
 	void Draw(RenderWindow& window);
 };
 
