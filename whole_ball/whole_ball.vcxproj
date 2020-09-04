@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
@@ -161,6 +162,7 @@
   <ItemGroup>
     <ClInclude Include="Ball.h" />
     <ClInclude Include="box2d\box2d.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />

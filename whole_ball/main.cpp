@@ -2,13 +2,14 @@
 #include <box2d/box2d.h>
 #include "Level.h"
 #include "Ball.h"
+#include "Enemy.h"
 #include <list>
 
 using namespace sf;
 using namespace std;
 
-const float SCALE = 30.f; //перевод из метров в px в box2d
-const float DEG = 57.29577f; //перевод из радиан в градусы в box2d
+const float SCALE = 30.f; // conversion from meters to px in box2d
+const float DEG = 57.29577f; // convert from radians to degrees in box2d
 
 b2Vec2 Gravity(0.0f, 0.0f);
 b2World World(Gravity);
@@ -41,42 +42,21 @@ int main()
     RenderWindow window;
     window.create(VideoMode(1024, 768), "Whole Ball Game v.1.0");
 
-    /*Создаем обьект Карта*/
+    /* Create a Map object */
     Level lvl;
-
     lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
-    Vector2i tileSize = lvl.GetTileSize();
 
-    /*Создаем обьект шар*/
+    /*Create a ball object*/
     Ball playerBall(World, lvl.GetObject("ball"), SCALE);
 
-    /*Создаем обьект платформа*/
+    /*Create an object of energy pills*/
+    Enemy energyPils(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
+
+    /*Create a platform object*/
     Texture platformImg; 
     platformImg.loadFromFile("image/platform.png");
     list <Object> platform;
     platform.push_back(getPlatform(platformImg));
-  
-    /*Создаем обьект враг*/
-    vector <Object> enemy;
-    vector <b2Body*> enemyBody;
-
-    enemy = lvl.GetObjects("enemy");
-
-    for (int i = 0; i < enemy.size(); i++)
-    {
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_staticBody;
-        bodyDef.position.Set((enemy[i].rect.left +
-            tileSize.x / 2 * (enemy[i].rect.width / tileSize.x - 1)) / SCALE,
-            (enemy[i].rect.top + tileSize.y / 2 * (enemy[i].rect.height / tileSize.y - 1)) / SCALE);
-        b2Body* body = World.CreateBody(&bodyDef);
-        b2CircleShape shape;
-        shape.m_radius = ((enemy[i].rect.height / 2) - 5) / SCALE;
-        body->CreateFixture(&shape, 1.0f);
-        body->SetUserData(&enemy[i].name);
-
-        enemyBody.push_back(body);
-    }
 
     while (window.isOpen())
     {
@@ -128,12 +108,12 @@ int main()
         
         window.clear();
 
-        /*Смена направления в зависимости от скорости*/
+        /*Change of direction depending on speed*/
         playerBall.SetDirection();
 
         playerBall.UpdatePosition(SCALE);
 
-        /*Перемещение платформы*/
+        /*Moving platform*/
         for (auto it = platform.begin(); it != platform.end(); it++)
         {   
             if (it->direct == false) continue;
@@ -144,17 +124,14 @@ int main()
             }
         }
 
-        /*Проверка на столкновения*/
-        playerBall.CheckCollision(enemy, enemyBody, platform);
+        /*Collision check*/
+        playerBall.CheckCollision(*energyPils.GetEnemy(), *energyPils.GetEnemyBody(), platform);
 
         lvl.Draw(window);
 
         playerBall.Draw(window);
 
-        for (const auto& obj : enemy)
-        {
-            window.draw(obj.sprite);
-        }
+        energyPils.Draw(window);
 
         for (const auto& obj : platform)
         {
