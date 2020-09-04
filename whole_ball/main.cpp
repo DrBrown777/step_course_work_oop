@@ -30,13 +30,6 @@ Object getPlatform(Texture& img)
     return obj;
 }
 
-void SetSpeed(Ball& playerBall, double _speedMin, double _speedMax)
-{
-    playerBall.pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
-    playerBall.speed.first = _speedMin;
-    playerBall.speed.second = _speedMax;
-}
-
 int main()
 {
     RenderWindow window;
@@ -50,7 +43,7 @@ int main()
     Ball playerBall(World, lvl.GetObject("ball"), SCALE);
 
     /*Create an object of energy pills*/
-    Enemy energyPils(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
+    Enemy energyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
 
     /*Create a platform object*/
     Texture platformImg; 
@@ -74,7 +67,7 @@ int main()
             case Event::KeyPressed:
                 if (event.key.code == Keyboard::Space)
                 {
-                    SetSpeed(playerBall, 0.45, 0.5);
+                    playerBall.SetSpeed();
                 }
                 break;
             case Event::MouseButtonReleased:
@@ -125,13 +118,13 @@ int main()
         }
 
         /*Collision check*/
-        playerBall.CheckCollision(*energyPils.GetEnemy(), *energyPils.GetEnemyBody(), platform);
+        playerBall.CheckCollision(energyPills, platform);
 
         lvl.Draw(window);
 
         playerBall.Draw(window);
 
-        energyPils.Draw(window);
+        energyPills.Draw(window);
 
         for (const auto& obj : platform)
         {

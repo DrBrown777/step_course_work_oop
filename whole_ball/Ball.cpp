@@ -63,17 +63,26 @@ void Ball::SetDirection()
     vel.Normalize();
 }
 
+void Ball::SetSpeed(double _speedMin, double _speedMax)
+{
+    speed.first = _speedMin;
+    speed.second = _speedMax;
+}
+
 void Ball::UpdatePosition(const float& SCALE)
 {
     b2Vec2 pos = pBodyBall->GetPosition();
     playerBall.sprite.setPosition(pos.x * SCALE, pos.y * SCALE);
 }
 
-void Ball::CheckCollision(vector<Object>& enemy, vector<b2Body*>& enemyBody, const list <Object>& platform)
+void Ball::CheckCollision(Enemy& energyPills, const list <Object>& platform)
 {
     for (b2ContactEdge* ce = pBodyBall->GetContactList(); ce; ce = NULL)
     {
         b2Contact* c = ce->contact;
+
+        vector <Object> enemy = energyPills.GetEnemy();
+        vector <b2Body*> enemyBody = energyPills.GetEnemyBody();
 
         for (int i = 0; i < enemyBody.size(); i++)
             if (c->GetFixtureB() == enemyBody[i]->GetFixtureList())
@@ -82,6 +91,9 @@ void Ball::CheckCollision(vector<Object>& enemy, vector<b2Body*>& enemyBody, con
                 enemy.erase(enemy.begin() + i);
                 enemyBody.erase(enemyBody.begin() + i);
             }
+
+        energyPills.SetEnemy(enemy);
+        energyPills.SetEnemyBody(enemyBody);
     }
 
     for (auto it = platform.begin(); it != platform.end(); it++)

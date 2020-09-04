@@ -24,14 +24,24 @@ Enemy::Enemy(b2World& World, vector<Object> _enemy, Vector2i _tileSize, const fl
 
 }
 
-vector<Object>* Enemy::GetEnemy()
+void Enemy::SetEnemy(vector<Object> _enemy)
 {
-    return &enemy;
+    enemy = _enemy;
 }
 
-vector<b2Body*>* Enemy::GetEnemyBody()
+void Enemy::SetEnemyBody(vector<b2Body*> _enemyBody)
 {
-    return &enemyBody;
+    enemyBody = _enemyBody;
+}
+
+vector<Object> Enemy::GetEnemy()
+{
+    return enemy;
+}
+
+vector<b2Body*> Enemy::GetEnemyBody()
+{
+    return enemyBody;
 }
 
 void Enemy::Draw(RenderWindow& window)

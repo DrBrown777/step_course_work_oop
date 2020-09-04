@@ -1,5 +1,6 @@
 #pragma once
 #include "Level.h"
+#include "Enemy.h"
 #include <box2d/box2d.h>
 #include <list>
 
@@ -16,8 +17,8 @@ private:
 public:
 	Ball(b2World& World, Object _playerBall, const float& SCALE);
 	void SetDirection();
+	void SetSpeed(double _speedMin = 0.45, double _speedMax = 0.5);
 	void UpdatePosition(const float& SCALE);
-	void CheckCollision(vector <Object>& enemy, vector <b2Body*>& enemyBody, const list <Object>& platform);
+	void CheckCollision(Enemy& energyPills, const list <Object>& platform);
 	void Draw(RenderWindow& window);
-	friend void SetSpeed(Ball& playerBall, double _speedMin, double _speedMax);
 };
