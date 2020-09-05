@@ -22,6 +22,8 @@ Ball::Ball(b2World& World, Object _playerBall, const float& SCALE)
     speed = make_pair(0, 0);
 
     directionFlag = false;
+    UP.Set(0.0f, -0.5f); DOWN.Set(0.0f, 0.5f);
+    LEFT.Set(-0.5f, 0.0f); RIGHT.Set(0.5f, 0.0f);
 }
 
 void Ball::SetDirection()
@@ -75,7 +77,7 @@ void Ball::UpdatePosition(const float& SCALE)
     playerBall.sprite.setPosition(pos.x * SCALE, pos.y * SCALE);
 }
 
-void Ball::CheckCollision(Enemy& energyPills, const list <Object>& platform)
+void Ball::CheckCollision(Enemy& energyPills, Batty& _platform)
 {
     for (b2ContactEdge* ce = pBodyBall->GetContactList(); ce; ce = NULL)
     {
@@ -96,9 +98,12 @@ void Ball::CheckCollision(Enemy& energyPills, const list <Object>& platform)
         energyPills.SetEnemyBody(enemyBody);
     }
 
+    list <Object> platform = _platform.GetPlatform();
+
     for (auto it = platform.begin(); it != platform.end(); it++)
     {
-        if (it->sprite.getGlobalBounds().intersects(playerBall.sprite.getGlobalBounds()))
+        if (it->move == true) continue;
+        if (it->sprite.getGlobalBounds().contains(playerBall.sprite.getPosition()))
         {
             b2Vec2 dir = pBodyBall->GetLinearVelocity();
 
@@ -106,22 +111,22 @@ void Ball::CheckCollision(Enemy& energyPills, const list <Object>& platform)
             {
                 if (dir.x < 0 && dir.y == 0)
                 {
-                    pBodyBall->SetLinearVelocity(b2Vec2(0.0f, 0.5f));
+                    pBodyBall->SetLinearVelocity(DOWN);
                     directionFlag = true;
                 }
                 else if (dir.x > 0 && dir.y == 0)
                 {
-                    pBodyBall->SetLinearVelocity(b2Vec2(0.0f, -0.5f));
+                    pBodyBall->SetLinearVelocity(UP);
                     directionFlag = true;
                 }
                 else if (dir.y < 0 && dir.x == 0)
                 {
-                    pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
+                    pBodyBall->SetLinearVelocity(RIGHT);
                     directionFlag = false;
                 }
                 else if (dir.y > 0 && dir.x == 0)
                 {
-                    pBodyBall->SetLinearVelocity(b2Vec2(-0.5f, 0.0f));
+                    pBodyBall->SetLinearVelocity(LEFT);
                     directionFlag = false;
                 }
             }
@@ -129,22 +134,22 @@ void Ball::CheckCollision(Enemy& energyPills, const list <Object>& platform)
             {
                 if (dir.x < 0 && dir.y == 0)
                 {
-                    pBodyBall->SetLinearVelocity(b2Vec2(0.0f, -0.5f));
+                    pBodyBall->SetLinearVelocity(UP);
                     directionFlag = true;
                 }
                 else if (dir.x > 0 && dir.y == 0)
                 {
-                    pBodyBall->SetLinearVelocity(b2Vec2(0.0f, 0.5f));
+                    pBodyBall->SetLinearVelocity(DOWN);
                     directionFlag = true;
                 }
                 else if (dir.y < 0 && dir.x == 0)
                 {
-                    pBodyBall->SetLinearVelocity(b2Vec2(-0.5f, 0.0f));
+                    pBodyBall->SetLinearVelocity(LEFT);
                     directionFlag = false;
                 }
                 else if (dir.y > 0 && dir.x == 0)
                 {
-                    pBodyBall->SetLinearVelocity(b2Vec2(0.5f, 0.0f));
+                    pBodyBall->SetLinearVelocity(RIGHT);
                     directionFlag = false;
                 }
             }
