@@ -21,7 +21,6 @@ Enemy::Enemy(b2World& World, vector<Object> _enemy, Vector2i _tileSize, const fl
 
         enemyBody.push_back(body);
     }
-
 }
 
 void Enemy::SetEnemy(vector<Object> _enemy)

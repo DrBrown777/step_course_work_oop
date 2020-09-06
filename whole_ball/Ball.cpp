@@ -97,13 +97,14 @@ void Ball::CheckCollision(Enemy& energyPills, Batty& _platform)
         energyPills.SetEnemy(enemy);
         energyPills.SetEnemyBody(enemyBody);
     }
-
+    
     list <Object> platform = _platform.GetPlatform();
 
     for (auto it = platform.begin(); it != platform.end(); it++)
     {
         if (it->move == true) continue;
-        if (it->sprite.getGlobalBounds().contains(playerBall.sprite.getPosition()))
+
+        if (it->sprite.getGlobalBounds().intersects(playerBall.sprite.getGlobalBounds()))
         {
             b2Vec2 dir = pBodyBall->GetLinearVelocity();
 
@@ -153,6 +154,7 @@ void Ball::CheckCollision(Enemy& energyPills, Batty& _platform)
                     directionFlag = false;
                 }
             }
+            SetDirection();
         }
     }
 }

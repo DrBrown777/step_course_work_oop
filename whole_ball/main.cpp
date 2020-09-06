@@ -15,6 +15,33 @@ const float DEG = 57.29577f; // convert from radians to degrees in box2d
 b2Vec2 Gravity(0.0f, 0.0f);
 b2World World(Gravity);
 
+
+//class Control
+//{
+//private:
+//    Level* lvl;
+//    Ball* ball;
+//    Enemy* pills;
+//    Batty* bat;
+//public:
+//    Control(b2World& World, const float& _SCALE)
+//    {
+//        lvl = new Level;
+//        lvl->LoadFromFile("LevelOne/level1.tmx", World, SCALE);
+//        bat = new Batty;
+//        ball = new Ball(World, lvl->GetObject("ball"), _SCALE);
+//        pills = new Enemy(World, lvl->GetObjects("enemy"), lvl->GetTileSize(), _SCALE);
+//    }
+//    ~Control()
+//    {
+//        delete bat;
+//        delete ball;
+//        delete pills;
+//        delete lvl;
+//    }
+//};
+
+
 int main()
 {
     RenderWindow window;
@@ -33,11 +60,30 @@ int main()
     /*Create a platform object*/
     Batty platform;
 
+    //Control manager(World, SCALE);
+
+    /*Clock clock;
+    Time time;
+
+    Font font;
+    font.loadFromFile("consola.ttf");
+
+    Text timer;
+    timer.setFont(font);
+    timer.setCharacterSize(25);
+    timer.setFillColor(Color(0, 255, 255));
+    timer.setStyle(Text::Bold);
+    timer.setPosition(10, 10);*/
+    
+
     while (window.isOpen())
     {
         Event event;
 
         Vector2i mousePos = Mouse::getPosition(window);
+
+        /*time = clock.getElapsedTime();
+        timer.setString("Timer " + to_string(100-(int)time.asSeconds()));*/
 
         while (window.pollEvent(event))
         {
@@ -81,6 +127,8 @@ int main()
         playerBall.Draw(window);
         energyPills.Draw(window);
         platform.Draw(window);
+
+        /*window.draw(timer);*/
 
         window.display();
     }
