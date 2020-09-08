@@ -1,9 +1,13 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
 #include "Level.h"
+/*
 #include "Ball.h"
 #include "Enemy.h"
+*/
 #include "Batty.h"
+#include "GameObject.h"
+#include "Control.h"
 #include <list>
 
 using namespace sf;
@@ -52,10 +56,10 @@ int main()
     lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
 
     /*Create a ball object*/
-    Ball playerBall(World, lvl.GetObject("ball"), SCALE);
+    //Ball playerBall(World, lvl.GetObject("ball"), SCALE);
 
     /*Create an object of energy pills*/
-    Enemy energyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
+    //Enemy energyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
 
     /*Create a platform object*/
     Batty platform;
@@ -95,7 +99,7 @@ int main()
             case Event::KeyPressed:
                 if (event.key.code == Keyboard::Space)
                 {
-                    playerBall.SetSpeed();
+                    //playerBall.SetSpeed();
                 }
                 break;
             case Event::MouseButtonReleased:
@@ -109,23 +113,23 @@ int main()
         window.clear();
 
         /*Change of direction depending on speed*/
-        playerBall.SetDirection();
+        //playerBall.SetDirection();
 
         /*Moving ball*/
-        playerBall.UpdatePosition(SCALE);
+        //playerBall.UpdatePosition(SCALE);
 
         /*Moving platform*/
         platform.UpdatePosition(mousePos);
 
         /*Collision check*/
-        playerBall.CheckCollision(energyPills, platform);
+        //playerBall.CheckCollision(energyPills, platform);
 
         /*Drawing Map*/
         lvl.Draw(window);
 
         /*Draving Objects*/
-        playerBall.Draw(window);
-        energyPills.Draw(window);
+        //playerBall.Draw(window);
+        //energyPills.Draw(window);
         platform.Draw(window);
 
         /*window.draw(timer);*/

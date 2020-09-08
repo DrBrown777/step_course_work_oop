@@ -153,17 +153,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Ball.cpp" />
-    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Control.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Batty.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ball.h" />
     <ClInclude Include="box2d\box2d.h" />
-    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Control.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Batty.h" />
     <ClInclude Include="resource.h" />
