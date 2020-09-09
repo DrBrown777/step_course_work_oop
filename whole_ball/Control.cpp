@@ -17,21 +17,6 @@ Control::Control(b2World& World, const Object& _playerBall, const vector <Object
 	LEFT.Set(-0.5f, 0.0f); RIGHT.Set(0.5f, 0.0f);
 }
 
-Control::Control(const Control& obj)
-{
-    playerBall = new Ball(/**/);
-
-    for (int i = 0; i < obj.energyPills.size(); i++)
-    {
-        energyPills.push_back(new Enemy(/**/);
-    }
-
-    ballSpeed = obj.ballSpeed;
-    ballDirFlag = obj.ballDirFlag;
-    UP = obj.UP; DOWN = obj.DOWN;
-    LEFT = obj.LEFT; RIGHT = obj.RIGHT;
-}
-
 void Control::SetSpeedBall(double _speedMin, double _speedMax)
 {
 	ballSpeed.first = _speedMin;
@@ -73,13 +58,22 @@ void Control::SetDirectionBall()
         }
     }
     
+    playerBall->GetBody()->SetLinearVelocity(vel);
+    
+    /*
     b2Body* bd = playerBall->GetBody();
     
     bd->SetLinearVelocity(vel);
 
     playerBall->SetBody(bd);
+    */
 
     vel.Normalize();
+}
+
+pair<double, double> Control::GetSpeedBall()
+{
+    return ballSpeed;
 }
 
 void Control::UpdatePositionBall(const float& SCALE)

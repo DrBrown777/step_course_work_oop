@@ -18,12 +18,10 @@ class Ball : public GameObject
 {
 public:
     Ball(b2World& World, const Object& _playerBall, const float& SCALE);
-    Ball(const Ball& ball);
 };
 
 class Enemy : public GameObject
 {
 public:
     Enemy(b2World& World, const Object& _enemy, const Vector2i _tileSize, const float& SCALE);
-    Enemy(const Enemy& enemy);
 };

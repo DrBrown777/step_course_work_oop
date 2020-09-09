@@ -45,12 +45,6 @@ Ball::Ball(b2World& World, const Object& _playerBall, const float& SCALE)
     body->SetUserData(&obj.name);
 }
 
-Ball::Ball(const Ball& ball)
-{
-    obj = ball.obj;
-    body = ball.body;
-}
-
 Enemy::Enemy(b2World& World, const Object& _enemy, const Vector2i _tileSize, const float& SCALE)
 {
     obj = _enemy;
@@ -66,10 +60,4 @@ Enemy::Enemy(b2World& World, const Object& _enemy, const Vector2i _tileSize, con
     shape.m_radius = ((obj.rect.height / 2) - 5) / SCALE;
     body->CreateFixture(&shape, 1.0f);
     body->SetUserData(&obj.name);
-}
-
-Enemy::Enemy(const Enemy& enemy)
-{
-    obj = enemy.obj;
-    body = enemy.body;
 }

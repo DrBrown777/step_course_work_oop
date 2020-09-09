@@ -1,10 +1,6 @@
 ﻿#include <SFML/Graphics.hpp>
 #include <box2d/box2d.h>
 #include "Level.h"
-/*
-#include "Ball.h"
-#include "Enemy.h"
-*/
 #include "Batty.h"
 #include "GameObject.h"
 #include "Control.h"
@@ -19,38 +15,6 @@ const float DEG = 57.29577f; // convert from radians to degrees in box2d
 b2Vec2 Gravity(0.0f, 0.0f);
 b2World World(Gravity);
 
-
-//class Control
-//{
-//private:
-//    Level* lvl;
-//    Ball* ball;
-//    Enemy* pills;
-//    Batty* bat;
-//public:
-//    Control(b2World& World, const float& _SCALE)
-//    {
-//        lvl = new Level;
-//        lvl->LoadFromFile("LevelOne/level1.tmx", World, SCALE);
-//        bat = new Batty;
-//        ball = new Ball(World, lvl->GetObject("ball"), _SCALE);
-//        pills = new Enemy(World, lvl->GetObjects("enemy"), lvl->GetTileSize(), _SCALE);
-//    }
-//    ~Control()
-//    {
-//        delete bat;
-//        delete ball;
-//        delete pills;
-//        delete lvl;
-//    }
-//};
-
-void set(Control man)
-{
-    /*Тест функция*/
-}
-
-
 int main()
 {
     RenderWindow window;
@@ -62,8 +26,6 @@ int main()
 
     /*Create an object of manager*/
     Control manager(World, lvl.GetObject("ball"), lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
-
-    set(manager);
 
     /*Create a platform object*/
     Batty platform;
@@ -102,6 +64,10 @@ int main()
                 if (event.key.code == Keyboard::Space)
                 {
                     manager.SetSpeedBall();
+                }
+                if (event.key.code == Keyboard::Enter)
+                {
+                    manager.SetSpeedBall(manager.GetSpeedBall().first * 2, manager.GetSpeedBall().second * 2);
                 }
                 break;
             case Event::MouseButtonReleased:
