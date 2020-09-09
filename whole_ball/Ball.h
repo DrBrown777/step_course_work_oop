@@ -1,9 +1,9 @@
 #pragma once
-#include "Level.h"
-#include "Enemy.h"
-#include "Batty.h"
-#include <box2d/box2d.h>
-#include <list>
+//#include "Level.h"
+//#include "Enemy.h"
+//#include "Batty.h"
+//#include <box2d/box2d.h>
+//#include <list>
 
 using namespace std;
 using namespace sf;

@@ -7,25 +7,23 @@ protected:
     Object obj;
     b2Body* body;
 public:
-    virtual Object GetObj() = 0;
-    virtual b2Body* GetBody() = 0;
-    virtual void Draw(RenderWindow& window) = 0;
+    Object GetObj();
+    b2Body* GetBody();
+    void SetObj(Object _obj);
+    void SetBody(b2Body* _body);
+    void Draw(RenderWindow& window);
 };
 
 class Ball : public GameObject
 {
 public:
-    Ball(b2World& World, Object _playerBall, const float& SCALE);
-    Object GetObj() override;
-    b2Body* GetBody() override;
-    void Draw(RenderWindow& window) override;
+    Ball(b2World& World, const Object& _playerBall, const float& SCALE);
+    Ball(const Ball& ball);
 };
 
 class Enemy : public GameObject
 {
 public:
-    Enemy(b2World& World, Object _enemy, Vector2i _tileSize, const float& SCALE);
-    Object GetObj() override;
-    b2Body* GetBody() override;
-    void Draw(RenderWindow& window) override;
+    Enemy(b2World& World, const Object& _enemy, const Vector2i _tileSize, const float& SCALE);
+    Enemy(const Enemy& enemy);
 };

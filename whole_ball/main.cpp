@@ -45,6 +45,11 @@ b2World World(Gravity);
 //    }
 //};
 
+void set(Control man)
+{
+    /*Тест функция*/
+}
+
 
 int main()
 {
@@ -55,16 +60,13 @@ int main()
     Level lvl;
     lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
 
-    /*Create a ball object*/
-    //Ball playerBall(World, lvl.GetObject("ball"), SCALE);
+    /*Create an object of manager*/
+    Control manager(World, lvl.GetObject("ball"), lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
 
-    /*Create an object of energy pills*/
-    //Enemy energyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
+    set(manager);
 
     /*Create a platform object*/
     Batty platform;
-
-    //Control manager(World, SCALE);
 
     /*Clock clock;
     Time time;
@@ -99,7 +101,7 @@ int main()
             case Event::KeyPressed:
                 if (event.key.code == Keyboard::Space)
                 {
-                    //playerBall.SetSpeed();
+                    manager.SetSpeedBall();
                 }
                 break;
             case Event::MouseButtonReleased:
@@ -113,23 +115,22 @@ int main()
         window.clear();
 
         /*Change of direction depending on speed*/
-        //playerBall.SetDirection();
+        manager.SetDirectionBall();
 
         /*Moving ball*/
-        //playerBall.UpdatePosition(SCALE);
+        manager.UpdatePositionBall(SCALE);
 
         /*Moving platform*/
         platform.UpdatePosition(mousePos);
 
         /*Collision check*/
-        //playerBall.CheckCollision(energyPills, platform);
+        manager.CheckCollisionBall(platform);
 
         /*Drawing Map*/
         lvl.Draw(window);
 
         /*Draving Objects*/
-        //playerBall.Draw(window);
-        //energyPills.Draw(window);
+        manager.DrawGameObject(window);
         platform.Draw(window);
 
         /*window.draw(timer);*/

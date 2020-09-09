@@ -1,6 +1,31 @@
 #include "GameObject.h"
 
-Ball::Ball(b2World& World, Object _playerBall, const float& SCALE)
+Object GameObject::GetObj()
+{
+    return obj;
+}
+
+b2Body* GameObject::GetBody()
+{
+    return body;
+}
+
+void GameObject::SetObj(Object _obj)
+{
+    obj = _obj;
+}
+
+void GameObject::SetBody(b2Body* _body)
+{
+    body = _body;
+}
+
+void GameObject::Draw(RenderWindow& window)
+{
+    window.draw(obj.sprite);
+}
+
+Ball::Ball(b2World& World, const Object& _playerBall, const float& SCALE)
 {
     obj = _playerBall;
 
@@ -20,22 +45,13 @@ Ball::Ball(b2World& World, Object _playerBall, const float& SCALE)
     body->SetUserData(&obj.name);
 }
 
-Object Ball::GetObj()
+Ball::Ball(const Ball& ball)
 {
-    return obj;
+    obj = ball.obj;
+    body = ball.body;
 }
 
-b2Body* Ball::GetBody()
-{
-    return body;
-}
-
-void Ball::Draw(RenderWindow& window)
-{
-    window.draw(obj.sprite);
-}
-
-Enemy::Enemy(b2World& World, Object _enemy, Vector2i _tileSize, const float& SCALE)
+Enemy::Enemy(b2World& World, const Object& _enemy, const Vector2i _tileSize, const float& SCALE)
 {
     obj = _enemy;
 
@@ -52,17 +68,8 @@ Enemy::Enemy(b2World& World, Object _enemy, Vector2i _tileSize, const float& SCA
     body->SetUserData(&obj.name);
 }
 
-Object Enemy::GetObj()
+Enemy::Enemy(const Enemy& enemy)
 {
-    return obj;
-}
-
-b2Body* Enemy::GetBody()
-{
-    return body;
-}
-
-void Enemy::Draw(RenderWindow& window)
-{
-    window.draw(obj.sprite);
+    obj = enemy.obj;
+    body = enemy.body;
 }
