@@ -36,8 +36,6 @@ int main()
     /*Create a platform object*/
     Batty platform;
 
-    platform.InitPlatform();
-
     /*Clock clock;
     Time time;
 
@@ -66,11 +64,13 @@ int main()
             lvl.DestroyLevel();
             manager.DestroyObjects();
             platform.DestroyPlatform();
+
             window.clear();
+
             lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
             manager.InitBall(World, lvl.GetObject("ball"), SCALE);
             manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
-            platform.InitPlatform();
+            platform.AddPlatform();
         }
 
         while (window.pollEvent(event))

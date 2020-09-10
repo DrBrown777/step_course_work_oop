@@ -1,6 +1,6 @@
 #include "Batty.h"
 
-void Batty::InitPlatform()
+Batty::Batty()
 {
     platformImg.loadFromFile("image/platform.png");
 
@@ -11,7 +11,7 @@ void Batty::InitPlatform()
     bat.sprite.setTextureRect(bat.rect);
     bat.sprite.setOrigin(bat.rect.width / 2, bat.rect.height / 2);
     bat.sprite.setPosition(100, 85);
-    bat.sprite.rotate(45);
+    bat.sprite.setRotation(45);
 
     platform.push_back(bat);
 }
@@ -19,6 +19,11 @@ void Batty::InitPlatform()
 list<Object> Batty::GetPlatform()
 {
     return platform;
+}
+
+void Batty::AddPlatform()
+{
+    platform.push_back(bat);
 }
 
 void Batty::StatePlatform(const Vector2i& mousePos, const Event& event)
@@ -37,9 +42,9 @@ void Batty::StatePlatform(const Vector2i& mousePos, const Event& event)
         }
     }
     if (platform.empty())
-        platform.push_back(bat);
+        AddPlatform();
     else if (platform.back().sprite.getPosition().y > 100)
-        platform.push_back(bat);
+        AddPlatform();
     for (auto it = platform.begin(); it != platform.end(); it++)
     {
         if (it->sprite.getPosition().y > 100)
