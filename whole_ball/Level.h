@@ -42,6 +42,7 @@ public:
     Object GetObject(string name);
     vector<Object> GetObjects(string name);
     Vector2i GetTileSize();
+    void DestroyLevel();
     void Draw(RenderWindow& window);
     bool LoadFromFile(string filename, b2World& World, const float& SCALE);
 };

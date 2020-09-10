@@ -22,6 +22,20 @@ Vector2i Level::GetTileSize()
     return Vector2i(tileWidth, tileHeight);
 }
 
+void Level::DestroyLevel()
+{
+    objects.clear();
+    layers.clear();
+    wall.clear();
+
+    for (int i = 0; i < wallBody.size(); i++)
+    {
+        wallBody[i]->GetFixtureList()->GetBody()->DestroyFixture(wallBody[i]->GetFixtureList());
+    }
+
+    wallBody.clear();
+}
+
 void Level::Draw(RenderWindow& window)
 {
     for (int layer = 0; layer < layers.size(); layer++)

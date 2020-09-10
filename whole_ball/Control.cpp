@@ -1,20 +1,28 @@
 #include "Control.h"
 
-Control::Control(b2World& World, const Object& _playerBall, const vector <Object>& _enemy, const Vector2i& _tileSize, const float& SCALE)
+Control::Control()
 {
-	playerBall = new Ball(World, _playerBall, SCALE);
-	
-	for (int i = 0; i < _enemy.size(); i++)
-	{
-		energyPills.push_back(new Enemy(World, _enemy[i], _tileSize, SCALE));
-	}
-
+    playerBall = nullptr;
 	ballSpeed = make_pair(0, 0);
 
 	ballDirFlag = false;
 
 	UP.Set(0.0f, -0.5f); DOWN.Set(0.0f, 0.5f);
 	LEFT.Set(-0.5f, 0.0f); RIGHT.Set(0.5f, 0.0f);
+}
+
+void Control::InitBall(b2World& World, const Object& _playerBall, const float& SCALE)
+{
+    playerBall = new Ball(World, _playerBall, SCALE);
+    SetSpeedBall(0, 0);
+}
+
+void Control::InitEnergyPills(b2World& World, const vector<Object>& _enemy, const Vector2i& _tileSize, const float& SCALE)
+{
+    for (int i = 0; i < _enemy.size(); i++)
+    {
+        energyPills.push_back(new Enemy(World, _enemy[i], _tileSize, SCALE));
+    }
 }
 
 void Control::SetSpeedBall(double _speedMin, double _speedMax)
@@ -74,6 +82,11 @@ void Control::SetDirectionBall()
 pair<double, double> Control::GetSpeedBall()
 {
     return ballSpeed;
+}
+
+vector<GameObject*> Control::GetEnergyPills()
+{
+    return energyPills;
 }
 
 void Control::UpdatePositionBall(const float& SCALE)
@@ -163,6 +176,20 @@ void Control::CheckCollisionBall(Batty& _platform)
     }
 }
 
+void Control::DestroyObjects()
+{
+    playerBall->GetBody()->DestroyFixture(playerBall->GetBody()->GetFixtureList());
+    
+    playerBall = nullptr;
+
+    for (int i = 0; i < energyPills.size(); i++)
+    {
+        energyPills.at(i)->GetBody()->DestroyFixture(energyPills.at(i)->GetBody()->GetFixtureList());
+    }
+
+    energyPills.clear();
+}
+
 void Control::DrawGameObject(RenderWindow& window)
 {
     window.draw(playerBall->GetObj().sprite);
@@ -175,7 +202,14 @@ void Control::DrawGameObject(RenderWindow& window)
 
 Control::~Control()
 {
+    playerBall->GetBody()->DestroyFixture(playerBall->GetBody()->GetFixtureList());
+
 	delete playerBall;
+
+    for (int i = 0; i < energyPills.size(); i++)
+    {
+        energyPills.at(i)->GetBody()->DestroyFixture(energyPills.at(i)->GetBody()->GetFixtureList());
+    }
 
 	for (auto& obj : energyPills)
 	{

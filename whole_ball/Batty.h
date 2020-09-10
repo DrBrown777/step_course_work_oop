@@ -9,9 +9,10 @@ private:
 	Texture platformImg;
 	list <Object> platform;
 public:
-	Batty();
+	void InitPlatform();
 	list <Object> GetPlatform();
-	void InitPlatform(const Vector2i& mousePos, const Event& event);
+	void StatePlatform(const Vector2i& mousePos, const Event& event);
+	void DestroyPlatform();
 	void UpdatePosition(const Vector2i& mousePos);
 	void Draw(RenderWindow& window);
 };

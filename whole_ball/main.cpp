@@ -25,10 +25,18 @@ int main()
     lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
 
     /*Create an object of manager*/
-    Control manager(World, lvl.GetObject("ball"), lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
+    Control manager;
+
+    /*Create an object of Ball*/
+    manager.InitBall(World, lvl.GetObject("ball"), SCALE);
+
+    /*Create an object of EnergyPills*/
+    manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
 
     /*Create a platform object*/
     Batty platform;
+
+    platform.InitPlatform();
 
     /*Clock clock;
     Time time;
@@ -52,6 +60,18 @@ int main()
 
         /*time = clock.getElapsedTime();
         timer.setString("Timer " + to_string(100-(int)time.asSeconds()));*/
+        
+        if (manager.GetEnergyPills().empty())
+        {
+            lvl.DestroyLevel();
+            manager.DestroyObjects();
+            platform.DestroyPlatform();
+            window.clear();
+            lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
+            manager.InitBall(World, lvl.GetObject("ball"), SCALE);
+            manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
+            platform.InitPlatform();
+        }
 
         while (window.pollEvent(event))
         {
@@ -71,7 +91,7 @@ int main()
                 }
                 break;
             case Event::MouseButtonReleased:
-                platform.InitPlatform(mousePos, event);
+                platform.StatePlatform(mousePos, event);
                 break;
             }
         }
