@@ -10,14 +10,9 @@ b2Body* GameObject::GetBody()
     return body;
 }
 
-void GameObject::SetObj(Object _obj)
+void GameObject::SetPosObj(float x, float y)
 {
-    obj = _obj;
-}
-
-void GameObject::SetBody(b2Body* _body)
-{
-    body = _body;
+    obj.sprite.setPosition(x, y);
 }
 
 void GameObject::Draw(RenderWindow& window)

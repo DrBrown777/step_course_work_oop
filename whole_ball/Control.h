@@ -7,12 +7,10 @@ class Control
 private:
 	GameObject* playerBall;
 	vector <GameObject*> energyPills;
-
 	/*var for ball*/
 	pair <double, double> ballSpeed;
 	bool ballDirFlag;
 	b2Vec2 UP, DOWN, LEFT, RIGHT;
-
 public:
 	Control();
 	void InitBall(b2World& World, const Object& _playerBall, const float& SCALE);

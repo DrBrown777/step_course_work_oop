@@ -9,8 +9,7 @@ protected:
 public:
     Object GetObj();
     b2Body* GetBody();
-    void SetObj(Object _obj);
-    void SetBody(b2Body* _body);
+    void SetPosObj(float x, float y);
     void Draw(RenderWindow& window);
 };
 

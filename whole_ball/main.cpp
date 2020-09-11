@@ -34,7 +34,7 @@ int main()
     manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
 
     /*Create a platform object*/
-    Batty platform;
+    Batty platform(World, SCALE);
 
     /*Clock clock;
     Time time;
@@ -47,8 +47,9 @@ int main()
     timer.setCharacterSize(25);
     timer.setFillColor(Color(0, 255, 255));
     timer.setStyle(Text::Bold);
-    timer.setPosition(10, 10);*/
-    
+    timer.setPosition(10, 10);
+
+    int time_r = 20;*/
 
     while (window.isOpen())
     {
@@ -57,21 +58,21 @@ int main()
         Vector2i mousePos = Mouse::getPosition(window);
 
         /*time = clock.getElapsedTime();
-        timer.setString("Timer " + to_string(100-(int)time.asSeconds()));*/
+        timer.setString("Timer " + to_string(time_r-(int)time.asSeconds()));*/
         
-        if (manager.GetEnergyPills().empty())
-        {
-            lvl.DestroyLevel();
-            manager.DestroyObjects();
-            platform.DestroyPlatform();
+        //if (manager.GetEnergyPills().empty() /*|| (time_r - (int)time.asSeconds()) <= 0*/)
+        //{
+        //    lvl.DestroyLevel();
+        //    manager.DestroyObjects();
+        //    platform.DestroyPlatform();
+        //    window.clear();
 
-            window.clear();
-
-            lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
-            manager.InitBall(World, lvl.GetObject("ball"), SCALE);
-            manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
-            platform.AddPlatform();
-        }
+        //    lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
+        //    manager.InitBall(World, lvl.GetObject("ball"), SCALE);
+        //    manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
+        //    platform.AddPlatform();
+        //    //clock.restart();
+        //}
 
         while (window.pollEvent(event))
         {
@@ -107,7 +108,7 @@ int main()
         manager.UpdatePositionBall(SCALE);
 
         /*Moving platform*/
-        platform.UpdatePosition(mousePos);
+        platform.UpdatePosition(mousePos, SCALE);
 
         /*Collision check*/
         manager.CheckCollisionBall(platform);

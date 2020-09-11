@@ -68,14 +68,6 @@ void Control::SetDirectionBall()
     
     playerBall->GetBody()->SetLinearVelocity(vel);
     
-    /*
-    b2Body* bd = playerBall->GetBody();
-    
-    bd->SetLinearVelocity(vel);
-
-    playerBall->SetBody(bd);
-    */
-
     vel.Normalize();
 }
 
@@ -93,11 +85,7 @@ void Control::UpdatePositionBall(const float& SCALE)
 {
     b2Vec2 pos = playerBall->GetBody()->GetPosition();
 
-    Object ob = playerBall->GetObj();
-
-    ob.sprite.setPosition(pos.x * SCALE, pos.y * SCALE);
-
-    playerBall->SetObj(ob);
+    playerBall->SetPosObj(pos.x * SCALE, pos.y * SCALE);
 }
 
 void Control::CheckCollisionBall(Batty& _platform)
@@ -114,7 +102,7 @@ void Control::CheckCollisionBall(Batty& _platform)
                 energyPills.erase(energyPills.begin() + i);
             }
     }
-
+    /*
     list <Object> platform = _platform.GetPlatform();
 
     for (auto it = platform.begin(); it != platform.end(); it++)
@@ -174,13 +162,16 @@ void Control::CheckCollisionBall(Batty& _platform)
             SetDirectionBall();
         }
     }
+    */
 }
 
 void Control::DestroyObjects()
 {
     playerBall->GetBody()->DestroyFixture(playerBall->GetBody()->GetFixtureList());
-    
     playerBall = nullptr;
+
+    ballDirFlag = false;
+    ballSpeed.first, ballSpeed.second = 0;
 
     for (int i = 0; i < energyPills.size(); i++)
     {
