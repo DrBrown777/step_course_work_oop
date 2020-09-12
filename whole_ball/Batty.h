@@ -6,15 +6,14 @@ class Batty
 {
 private:
 	Object bat;
-	b2Body* batBody;
 	Texture platformImg;
-	list <pair <Object , b2Body*>> platform;
+	list <Object> platform;
 public:
-	Batty(b2World& World, const float& SCALE);
-	list <pair <Object, b2Body*>> GetPlatform();
+	Batty();
+	list <Object> GetPlatform();
 	void AddPlatform();
 	void StatePlatform(const Vector2i& mousePos, const Event& event);
 	void DestroyPlatform();
-	void UpdatePosition(const Vector2i& mousePos, const float& SCALE);
+	void UpdatePosition(const Vector2i& mousePos);
 	void Draw(RenderWindow& window);
 };

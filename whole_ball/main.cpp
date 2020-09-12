@@ -34,7 +34,7 @@ int main()
     manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
 
     /*Create a platform object*/
-    Batty platform(World, SCALE);
+    Batty platform;
 
     /*Clock clock;
     Time time;
@@ -60,19 +60,19 @@ int main()
         /*time = clock.getElapsedTime();
         timer.setString("Timer " + to_string(time_r-(int)time.asSeconds()));*/
         
-        //if (manager.GetEnergyPills().empty() /*|| (time_r - (int)time.asSeconds()) <= 0*/)
-        //{
-        //    lvl.DestroyLevel();
-        //    manager.DestroyObjects();
-        //    platform.DestroyPlatform();
-        //    window.clear();
+        if (manager.GetEnergyPills().empty() /*|| (time_r - (int)time.asSeconds()) <= 0*/)
+        {
+            lvl.DestroyLevel();
+            manager.DestroyObjects();
+            platform.DestroyPlatform();
+            window.clear();
 
-        //    lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
-        //    manager.InitBall(World, lvl.GetObject("ball"), SCALE);
-        //    manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
-        //    platform.AddPlatform();
-        //    //clock.restart();
-        //}
+            lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
+            manager.InitBall(World, lvl.GetObject("ball"), SCALE);
+            manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
+            platform.AddPlatform();
+            //clock.restart();
+        }
 
         while (window.pollEvent(event))
         {
@@ -108,10 +108,10 @@ int main()
         manager.UpdatePositionBall(SCALE);
 
         /*Moving platform*/
-        platform.UpdatePosition(mousePos, SCALE);
+        platform.UpdatePosition(mousePos);
 
         /*Collision check*/
-        manager.CheckCollisionBall(platform);
+        manager.CheckCollisionBall(platform.GetPlatform());
 
         /*Drawing Map*/
         lvl.Draw(window);

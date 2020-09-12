@@ -33,7 +33,7 @@ void Control::SetSpeedBall(double _speedMin, double _speedMax)
 
 void Control::SetDirectionBall()
 {
-	b2Vec2 vel = playerBall->GetBody()->GetLinearVelocity();
+    b2Vec2 vel = playerBall->GetBody()->GetLinearVelocity();
 
     if (ballDirFlag == false)
     {
@@ -65,7 +65,7 @@ void Control::SetDirectionBall()
             vel.x = 0;
         }
     }
-    
+
     playerBall->GetBody()->SetLinearVelocity(vel);
     
     vel.Normalize();
@@ -88,7 +88,7 @@ void Control::UpdatePositionBall(const float& SCALE)
     playerBall->SetPosObj(pos.x * SCALE, pos.y * SCALE);
 }
 
-void Control::CheckCollisionBall(Batty& _platform)
+void Control::CheckCollisionBall(list <Object> platform)
 {
     for (b2ContactEdge* ce = playerBall->GetBody()->GetContactList(); ce; ce = NULL)
     {
@@ -102,8 +102,6 @@ void Control::CheckCollisionBall(Batty& _platform)
                 energyPills.erase(energyPills.begin() + i);
             }
     }
-    /*
-    list <Object> platform = _platform.GetPlatform();
 
     for (auto it = platform.begin(); it != platform.end(); it++)
     {
@@ -162,7 +160,6 @@ void Control::CheckCollisionBall(Batty& _platform)
             SetDirectionBall();
         }
     }
-    */
 }
 
 void Control::DestroyObjects()

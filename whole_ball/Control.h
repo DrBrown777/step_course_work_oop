@@ -21,7 +21,7 @@ public:
 	pair <double, double> GetSpeedBall();
 	vector <GameObject*> GetEnergyPills();
 	void UpdatePositionBall(const float& SCALE);
-	void CheckCollisionBall(Batty& platform);
+	void CheckCollisionBall(list <Object> platform);
 	void DestroyObjects();
 	void DrawGameObject(RenderWindow& window);
 	~Control();
