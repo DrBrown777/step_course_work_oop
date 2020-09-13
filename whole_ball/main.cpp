@@ -36,7 +36,7 @@ int main()
     /*Create a platform object*/
     Batty platform;
 
-    /*Clock clock;
+    Clock clock;
     Time time;
 
     Font font;
@@ -49,7 +49,7 @@ int main()
     timer.setStyle(Text::Bold);
     timer.setPosition(10, 10);
 
-    int time_r = 20;*/
+    int time_r = 100;
 
     while (window.isOpen())
     {
@@ -57,21 +57,22 @@ int main()
 
         Vector2i mousePos = Mouse::getPosition(window);
 
-        /*time = clock.getElapsedTime();
-        timer.setString("Timer " + to_string(time_r-(int)time.asSeconds()));*/
+        time = clock.getElapsedTime();
+        timer.setString("Timer " + to_string(time_r-(int)time.asSeconds()));
         
-        if (manager.GetEnergyPills().empty() /*|| (time_r - (int)time.asSeconds()) <= 0*/)
+        if (manager.GetEnergyPills().empty() || (time_r - (int)time.asSeconds()) <= 0)
         {
-            lvl.DestroyLevel();
-            manager.DestroyObjects();
+            lvl.DestroyLevel(World);
+            manager.DestroyObjects(World);
             platform.DestroyPlatform();
+
             window.clear();
 
             lvl.LoadFromFile("LevelOne/level1.tmx", World, SCALE);
             manager.InitBall(World, lvl.GetObject("ball"), SCALE);
             manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
             platform.AddPlatform();
-            //clock.restart();
+            clock.restart();
         }
 
         while (window.pollEvent(event))
@@ -111,7 +112,7 @@ int main()
         platform.UpdatePosition(mousePos);
 
         /*Collision check*/
-        manager.CheckCollisionBall(platform.GetPlatform());
+        manager.CheckCollisionBall(World, platform.GetPlatform());
 
         /*Drawing Map*/
         lvl.Draw(window);
@@ -120,7 +121,7 @@ int main()
         manager.DrawGameObject(window);
         platform.Draw(window);
 
-        /*window.draw(timer);*/
+        window.draw(timer);
 
         window.display();
     }

@@ -40,7 +40,7 @@ Ball::Ball(b2World& World, const Object& _playerBall, const float& SCALE)
     body->SetUserData(&obj.name);
 }
 
-Enemy::Enemy(b2World& World, const Object& _enemy, const Vector2i _tileSize, const float& SCALE)
+Enemy::Enemy(b2World& World, const Object& _enemy, const Vector2i& _tileSize, const float& SCALE)
 {
     obj = _enemy;
 

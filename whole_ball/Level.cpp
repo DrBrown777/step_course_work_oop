@@ -5,6 +5,7 @@ Object Level::GetObject(string name)
     for (int i = 0; i < objects.size(); i++)
         if (objects[i].name == name)
             return objects[i];
+    return Object();
 }
 
 vector<Object> Level::GetObjects(string name)
@@ -13,8 +14,8 @@ vector<Object> Level::GetObjects(string name)
     for (int i = 0; i < objects.size(); i++)
         if (objects[i].name == name)
             vec.push_back(objects[i]);
-
-    return vec;
+    
+    return vec;  
 }
 
 Vector2i Level::GetTileSize()
@@ -22,7 +23,7 @@ Vector2i Level::GetTileSize()
     return Vector2i(tileWidth, tileHeight);
 }
 
-void Level::DestroyLevel()
+void Level::DestroyLevel(b2World& World)
 {
     objects.clear();
     layers.clear();
@@ -30,7 +31,8 @@ void Level::DestroyLevel()
 
     for (int i = 0; i < wallBody.size(); i++)
     {
-        wallBody[i]->GetFixtureList()->GetBody()->DestroyFixture(wallBody[i]->GetFixtureList());
+        wallBody.at(i)->GetFixtureList()->GetBody()->DestroyFixture(wallBody.at(i)->GetFixtureList());
+        World.DestroyBody(wallBody.at(i));
     }
 
     wallBody.clear();
@@ -223,8 +225,7 @@ bool Level::LoadFromFile(string filename, b2World& World, const float& SCALE)
                         enemyImage.loadFromFile("image/sphere.png");
                         sprite.setTexture(enemyImage);
                         sprite.setTextureRect(IntRect(0, 0, width, height));
-                        sprite.setPosition(
-                            x, y - height);
+                        sprite.setPosition(x, y - height);
                     }
                 }
                 else

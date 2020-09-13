@@ -22,5 +22,5 @@ public:
 class Enemy : public GameObject
 {
 public:
-    Enemy(b2World& World, const Object& _enemy, const Vector2i _tileSize, const float& SCALE);
+    Enemy(b2World& World, const Object& _enemy, const Vector2i& _tileSize, const float& SCALE);
 };

@@ -88,19 +88,21 @@ void Control::UpdatePositionBall(const float& SCALE)
     playerBall->SetPosObj(pos.x * SCALE, pos.y * SCALE);
 }
 
-void Control::CheckCollisionBall(list <Object> platform)
+void Control::CheckCollisionBall(b2World& World, list <Object> platform)
 {
     for (b2ContactEdge* ce = playerBall->GetBody()->GetContactList(); ce; ce = NULL)
     {
         b2Contact* c = ce->contact;
 
         for (int i = 0; i < energyPills.size(); i++)
-            if (c->GetFixtureB() == energyPills[i]->GetBody()->GetFixtureList())
+        {
+            if ( (c->GetFixtureA() == energyPills[i]->GetBody()->GetFixtureList()) || (c->GetFixtureB() == energyPills[i]->GetBody()->GetFixtureList()) )
             {
-                energyPills.at(i)->GetBody()->DestroyFixture(energyPills.at(i)->GetBody()->GetFixtureList());
+                World.DestroyBody(energyPills.at(i)->GetBody());
                 delete energyPills.at(i);
                 energyPills.erase(energyPills.begin() + i);
             }
+        }
     }
 
     for (auto it = platform.begin(); it != platform.end(); it++)
@@ -162,17 +164,18 @@ void Control::CheckCollisionBall(list <Object> platform)
     }
 }
 
-void Control::DestroyObjects()
+void Control::DestroyObjects(b2World& World)
 {
-    playerBall->GetBody()->DestroyFixture(playerBall->GetBody()->GetFixtureList());
-    playerBall = nullptr;
+    World.DestroyBody(playerBall->GetBody());
+    delete playerBall;
 
     ballDirFlag = false;
     ballSpeed.first, ballSpeed.second = 0;
 
     for (int i = 0; i < energyPills.size(); i++)
     {
-        energyPills.at(i)->GetBody()->DestroyFixture(energyPills.at(i)->GetBody()->GetFixtureList());
+        World.DestroyBody(energyPills.at(i)->GetBody());
+        delete energyPills.at(i);
     }
 
     energyPills.clear();
@@ -190,17 +193,10 @@ void Control::DrawGameObject(RenderWindow& window)
 
 Control::~Control()
 {
-    playerBall->GetBody()->DestroyFixture(playerBall->GetBody()->GetFixtureList());
-
 	delete playerBall;
-
-    for (int i = 0; i < energyPills.size(); i++)
-    {
-        energyPills.at(i)->GetBody()->DestroyFixture(energyPills.at(i)->GetBody()->GetFixtureList());
-    }
-
-	for (auto& obj : energyPills)
+   
+	for (auto obj : energyPills)
 	{
-		delete obj;
+        delete obj;
 	}
 }
