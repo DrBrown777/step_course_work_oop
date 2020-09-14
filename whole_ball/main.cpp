@@ -4,7 +4,10 @@
 #include "Batty.h"
 #include "GameObject.h"
 #include "Control.h"
+#include "GameStatistics.h"
 #include <list>
+#include <iomanip>
+#include <sstream>
 
 using namespace sf;
 using namespace std;
@@ -36,20 +39,11 @@ int main()
     /*Create a platform object*/
     Batty platform;
 
+    /*Create object statisticks*/
+    GameStatistics stata;
+
     Clock clock;
     Time time;
-
-    Font font;
-    font.loadFromFile("consola.ttf");
-
-    Text timer;
-    timer.setFont(font);
-    timer.setCharacterSize(25);
-    timer.setFillColor(Color(0, 255, 255));
-    timer.setStyle(Text::Bold);
-    timer.setPosition(10, 10);
-
-    int time_r = 100;
 
     while (window.isOpen())
     {
@@ -57,10 +51,15 @@ int main()
 
         Vector2i mousePos = Mouse::getPosition(window);
 
-        time = clock.getElapsedTime();
-        timer.setString("Timer " + to_string(time_r-(int)time.asSeconds()));
+        if (manager.GetSpeedBall().second != 0)
+        {
+            time = clock.getElapsedTime();
+        }
+
+        /*Update Timer*/
+        stata.UpdateTimer(time.asSeconds());
         
-        if (manager.GetEnergyPills().empty() || (time_r - (int)time.asSeconds()) <= 0)
+        if (manager.GetEnergyPills().empty() /*|| (time_r - (int)time.asSeconds()) <= 0*/)
         {
             lvl.DestroyLevel(World);
             manager.DestroyObjects(World);
@@ -85,6 +84,7 @@ int main()
             case Event::KeyPressed:
                 if (event.key.code == Keyboard::Space)
                 {
+                    clock.restart();
                     manager.SetSpeedBall();
                 }
                 if (event.key.code == Keyboard::Enter)
@@ -121,7 +121,7 @@ int main()
         manager.DrawGameObject(window);
         platform.Draw(window);
 
-        window.draw(timer);
+        stata.DrawStatistics(window);
 
         window.display();
     }
