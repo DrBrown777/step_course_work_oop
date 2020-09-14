@@ -25,12 +25,15 @@ private:
 	float timer_f;
 
 	const float timeRound = 100;
+	const int pointScore = 25;
 
 	string ToString(int n, int d);
 
 public:
 	GameStatistics();
-	void UpdateTimer(float second);
+	void Update(const float& second, const int& countEnergyPills);
+	void SetLive();
+	int GetTimeRound();
 	void DrawStatistics(RenderWindow& window);
 };
 

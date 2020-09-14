@@ -20,6 +20,9 @@ b2World World(Gravity);
 
 int main()
 {
+    bool gameOver = false;
+    bool failRound = false;
+
     RenderWindow window;
     window.create(VideoMode(1024, 768), "Whole Ball Game v.1.0");
 
@@ -56,11 +59,15 @@ int main()
             time = clock.getElapsedTime();
         }
 
-        /*Update Timer*/
-        stata.UpdateTimer(time.asSeconds());
+        /*Update Statistic*/
+        stata.Update(time.asSeconds(), manager.GetEnergyPills().size());
+
+        if (manager.GetEnergyPills().empty() || stata.GetTimeRound() <= 0) failRound = true;
         
-        if (manager.GetEnergyPills().empty() /*|| (time_r - (int)time.asSeconds()) <= 0*/)
+        if (failRound)
         {
+            stata.SetLive();
+
             lvl.DestroyLevel(World);
             manager.DestroyObjects(World);
             platform.DestroyPlatform();
@@ -72,6 +79,7 @@ int main()
             manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
             platform.AddPlatform();
             clock.restart();
+            failRound = false;
         }
 
         while (window.pollEvent(event))
