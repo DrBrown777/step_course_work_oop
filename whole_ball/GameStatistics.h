@@ -32,8 +32,11 @@ private:
 public:
 	GameStatistics();
 	void Update(const float& second, const int& countEnergyPills);
-	void SetLive();
+	void SetLiveDown();
+	void SetTimeRonud();
+	void SetScoreUp();
 	int GetTimeRound();
+	int GetLive();
 	void DrawStatistics(RenderWindow& window);
 };
 

@@ -60,11 +60,7 @@ void GameStatistics::Update(const float& second, const int& countEnergyPills)
 	timer_f = timeRound - second;
 	timer.second.setString(ToString(timer_f*10, 4));
 
-	if (countEnergyPills < energy_i)
-	{
-		score_i += pointScore;
-		score.second.setString(ToString(score_i, 5));
-	}
+	score.second.setString(ToString(score_i, 5));
 	
 	energy_i = countEnergyPills;
 	energy.second.setString(ToString(energy_i, 2));
@@ -72,14 +68,29 @@ void GameStatistics::Update(const float& second, const int& countEnergyPills)
 	live.second.setString(ToString(live_i, 1));
 }
 
-void GameStatistics::SetLive()
+void GameStatistics::SetLiveDown()
 {
 	live_i--;
+}
+
+void GameStatistics::SetTimeRonud()
+{
+	timer_f = timeRound;
+}
+
+void GameStatistics::SetScoreUp()
+{
+	score_i += pointScore;
 }
 
 int GameStatistics::GetTimeRound()
 {
 	return timer_f;
+}
+
+int GameStatistics::GetLive()
+{
+	return live_i;
 }
 
 void GameStatistics::DrawStatistics(RenderWindow& window)

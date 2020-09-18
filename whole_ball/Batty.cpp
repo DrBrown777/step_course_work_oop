@@ -16,7 +16,7 @@ Batty::Batty()
     platform.push_back(bat);
 }
 
-list<Object> Batty::GetPlatform()
+list<Object>& Batty::GetPlatform()
 {
     return platform;
 }

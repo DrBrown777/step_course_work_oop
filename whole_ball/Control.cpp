@@ -88,7 +88,7 @@ void Control::UpdatePositionBall(const float& SCALE)
     playerBall->SetPosObj(pos.x * SCALE, pos.y * SCALE);
 }
 
-void Control::CheckCollisionBall(b2World& World, list <Object> platform)
+void Control::CheckCollisionBall(b2World& World, const list <Object>& platform, GameStatistics& stata)
 {
     for (b2ContactEdge* ce = playerBall->GetBody()->GetContactList(); ce; ce = NULL)
     {
@@ -101,6 +101,7 @@ void Control::CheckCollisionBall(b2World& World, list <Object> platform)
                 World.DestroyBody(energyPills.at(i)->GetBody());
                 delete energyPills.at(i);
                 energyPills.erase(energyPills.begin() + i);
+                stata.SetScoreUp();
             }
         }
     }

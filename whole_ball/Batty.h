@@ -10,7 +10,7 @@ private:
 	list <Object> platform;
 public:
 	Batty();
-	list <Object> GetPlatform();
+	list <Object>& GetPlatform();
 	void AddPlatform();
 	void StatePlatform(const Vector2i& mousePos, const Event& event);
 	void DestroyPlatform();

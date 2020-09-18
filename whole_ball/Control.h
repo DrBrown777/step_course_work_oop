@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Batty.h"
+#include "GameStatistics.h"
 
 class Control
 {
@@ -19,7 +20,7 @@ public:
 	pair <double, double> GetSpeedBall();
 	vector <GameObject*> GetEnergyPills();
 	void UpdatePositionBall(const float& SCALE);
-	void CheckCollisionBall(b2World& World, list <Object> platform);
+	void CheckCollisionBall(b2World& World, const list <Object>& platform, GameStatistics& stata);
 	void DestroyObjects(b2World& World);
 	void DrawGameObject(RenderWindow& window);
 	Control(const Control& other) = delete;
