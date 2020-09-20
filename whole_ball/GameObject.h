@@ -24,3 +24,15 @@ class Enemy : public GameObject
 public:
     Enemy(b2World& World, const Object& _enemy, const Vector2i& _tileSize, const float& SCALE);
 };
+
+class SpeedUp : public GameObject
+{
+public:
+    SpeedUp(b2World& World, const Object& _speed, const Vector2i& _tileSize, const float& SCALE);
+};
+
+class Teleport : public GameObject
+{
+public:
+    Teleport(b2World& World, const Object& _teleport, const Vector2i& _tileSize, const float& SCALE);
+};

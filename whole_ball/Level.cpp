@@ -74,7 +74,7 @@ bool Level::LoadFromFile(string filename, b2World& World, const float& SCALE)
     image = tilesetElement->FirstChildElement("image");
     string tmp_imagepath = image->Attribute("source");
 
-    string imagepath = "LevelOne/" + tmp_imagepath;
+    string imagepath = "Levels/" + tmp_imagepath;
 
     Image img;
 
@@ -243,7 +243,7 @@ bool Level::LoadFromFile(string filename, b2World& World, const float& SCALE)
                 Rect <int> objectRect;
 
                 objectRect.left = x;
-                if (objectType == "collision")
+                if (objectType == "collision" || objectType == "speedup" || objectType == "port")
                     objectRect.top = y;
                 else
                     objectRect.top = y - height;

@@ -1,4 +1,5 @@
 ﻿#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <box2d/box2d.h>
 #include "Level.h"
 #include "Batty.h"
@@ -6,8 +7,6 @@
 #include "Control.h"
 #include "GameStatistics.h"
 #include <list>
-#include <iomanip>
-#include <sstream>
 #include <queue>
 
 using namespace sf;
@@ -45,6 +44,12 @@ int main()
     /*Create an object of EnergyPills*/
     manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
 
+    /*Create an object of SpeedUp*/
+    manager.InitSpeedUp(World, lvl.GetObject("speed"), lvl.GetTileSize(), SCALE);
+
+    /*Create an object of Teleport*/
+    manager.InitTeleport(World, lvl.GetObjects("teleport"), lvl.GetTileSize(), SCALE);
+
     /*Create a platform object*/
     Batty platform;
 
@@ -53,6 +58,19 @@ int main()
 
     Clock clock;
     Time time;
+
+    SoundBuffer buffer;
+    buffer.loadFromFile("sound/collect3.wav");
+    Sound soundCollect;
+    soundCollect.setBuffer(buffer);
+    Sound win;
+    SoundBuffer buffer_2;
+    buffer_2.loadFromFile("sound/win.wav");
+    win.setBuffer(buffer_2);
+    Sound music;
+    SoundBuffer buffer_3;
+    buffer_3.loadFromFile("sound/happy.ogg");
+    music.setBuffer(buffer_3);
 
     while (window.isOpen())
     {
@@ -78,6 +96,9 @@ int main()
         
         if (failRound || manager.GetEnergyPills().empty())
         {
+            music.stop();
+            Rounds.pop();
+            win.play();
             clock.restart();
             time = clock.getElapsedTime();
             stata.SetTimeRonud();
@@ -86,9 +107,13 @@ int main()
             manager.DestroyObjects(World);
             platform.DestroyPlatform();
 
+            buffer_3.loadFromFile("sound/fly.ogg");
+            music.setBuffer(buffer_3);
             lvl.LoadFromFile(Rounds.front(), World, SCALE);
             manager.InitBall(World, lvl.GetObject("ball"), SCALE);
             manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
+            manager.InitSpeedUp(World, lvl.GetObject("speed"), lvl.GetTileSize(), SCALE);
+            manager.InitTeleport(World, lvl.GetObjects("teleport"), lvl.GetTileSize(), SCALE);
             platform.AddPlatform();
             failRound = false;
         }
@@ -105,6 +130,7 @@ int main()
                 {
                     clock.restart();
                     manager.SetSpeedBall();
+                    music.play();
                 }
                 if (event.key.code == Keyboard::Enter)
                 {
@@ -128,7 +154,7 @@ int main()
         manager.UpdatePositionBall(SCALE);
 
         /*Collision check*/
-        manager.CheckCollisionBall(World, platform.GetPlatform(), stata);
+        manager.CheckCollisionBall(World, platform.GetPlatform(), SCALE, stata, soundCollect);
 
         /*Drawing Map*/
         lvl.Draw(window);
@@ -150,7 +176,7 @@ int main()
 
 void AddRounds(queue<string>& Rounds)
 {
-    Rounds.push("LevelOne/level1.tmx");
-    Rounds.push("LevelOne/level2.tmx");
+    Rounds.push("Levels/level1.tmx");
+    Rounds.push("Levels/level2.tmx");
     /* Rounds.push("LevelOne/level..n..");*/
 }
