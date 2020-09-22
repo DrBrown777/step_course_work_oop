@@ -13,33 +13,30 @@ Control::Control()
 	LEFT.Set(-0.5f, 0.0f); RIGHT.Set(0.5f, 0.0f);
 }
 
-void Control::InitBall(b2World& World, const Object& _playerBall, const float& SCALE)
+void Control::InitGameObjects(b2World& World, Level& lvl, const Vector2i& _tileSize, const float& SCALE)
 {
-    playerBall = new Ball(World, _playerBall, SCALE);
-    SetSpeedBall(0, 0);
-}
+    Object _playerBall = lvl.GetObject("ball");
+    vector<Object> _enemy = lvl.GetObjects("enemy");
+    Object _speed = lvl.GetObject("speed");
+    vector<Object> _teleport = lvl.GetObjects("teleport");
 
-void Control::InitEnergyPills(b2World& World, const vector<Object>& _enemy, const Vector2i& _tileSize, const float& SCALE)
-{
+    playerBall = new Ball(World, _playerBall, SCALE);
+
     for (int i = 0; i < _enemy.size(); i++)
     {
         energyPills.push_back(new Enemy(World, _enemy[i], _tileSize, SCALE));
     }
-}
 
-void Control::InitSpeedUp(b2World& World, const Object& _speed, const Vector2i& _tileSize, const float& SCALE)
-{
-    if (_speed.name == "")
-        return;
-    speedUp = new SpeedUp(World, _speed, _tileSize, SCALE);
-}
+    if (_speed.name != "")
+        speedUp = new SpeedUp(World, _speed, _tileSize, SCALE);
 
-void Control::InitTeleport(b2World& World, const vector<Object>& _teleport, const Vector2i& _tileSize, const float& SCALE)
-{
-    if (_teleport.empty()) 
-        return;
-    teleport.first = new Teleport(World, _teleport.at(0), _tileSize, SCALE);
-    teleport.second = new Teleport(World, _teleport.at(1), _tileSize, SCALE);
+    if (!_teleport.empty())
+    {
+        teleport.first = new Teleport(World, _teleport.at(0), _tileSize, SCALE);
+        teleport.second = new Teleport(World, _teleport.at(1), _tileSize, SCALE);
+    }
+
+    SetSpeedBall(0, 0);
 }
 
 void Control::SetSpeedBall(double _speedMin, double _speedMax)

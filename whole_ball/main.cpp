@@ -35,20 +35,13 @@ int main()
     Level lvl;
     lvl.LoadFromFile(Rounds.front(), World, SCALE);
 
+    Vector2i tileSize = lvl.GetTileSize();
+
     /*Create an object of manager*/
     Control manager;
 
-    /*Create an object of Ball*/
-    manager.InitBall(World, lvl.GetObject("ball"), SCALE);
-
-    /*Create an object of EnergyPills*/
-    manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
-
-    /*Create an object of SpeedUp*/
-    manager.InitSpeedUp(World, lvl.GetObject("speed"), lvl.GetTileSize(), SCALE);
-
-    /*Create an object of Teleport*/
-    manager.InitTeleport(World, lvl.GetObjects("teleport"), lvl.GetTileSize(), SCALE);
+    /*Create Game object*/
+    manager.InitGameObjects(World, lvl, tileSize, SCALE);
 
     /*Create a platform object*/
     Batty platform;
@@ -110,10 +103,7 @@ int main()
             buffer_3.loadFromFile("sound/fly.ogg");
             music.setBuffer(buffer_3);
             lvl.LoadFromFile(Rounds.front(), World, SCALE);
-            manager.InitBall(World, lvl.GetObject("ball"), SCALE);
-            manager.InitEnergyPills(World, lvl.GetObjects("enemy"), lvl.GetTileSize(), SCALE);
-            manager.InitSpeedUp(World, lvl.GetObject("speed"), lvl.GetTileSize(), SCALE);
-            manager.InitTeleport(World, lvl.GetObjects("teleport"), lvl.GetTileSize(), SCALE);
+            manager.InitGameObjects(World, lvl, tileSize, SCALE);
             platform.AddPlatform();
             failRound = false;
         }

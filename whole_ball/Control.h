@@ -18,11 +18,7 @@ private:
 public:
 	Control();
 
-	void InitBall(b2World& World, const Object& _playerBall, const float& SCALE);
-	void InitEnergyPills(b2World& World, const vector <Object>& _enemy, const Vector2i& _tileSize, const float& SCALE);
-	void InitSpeedUp(b2World& World, const Object& _speed, const Vector2i& _tileSize, const float& SCALE);
-	void InitTeleport(b2World& World, const vector <Object>& _teleport, const Vector2i& _tileSize, const float& SCALE);
-
+	void InitGameObjects(b2World& World, Level& lvl, const Vector2i& _tileSize, const float& SCALE);
 	void SetSpeedBall(double _speedMin = 0.45, double _speedMax = 0.5);
 	void SetDirectionBall();
 	pair <double, double> GetSpeedBall();
